@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>Portfólio | Design, Tecnologia & Marketing</title>
+
+  <style>
+    /* =========================
+       Base
+    ========================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0b0b0b;
+      --bg2: #070707;
+      --panel: rgba(12, 12, 12, 0.86);
+      --panel2: rgba(255,255,255,0.06);
+      --border: rgba(255, 255, 255, 0.10);
+      --border2: rgba(255, 255, 255, 0.14);
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.86);
+      --muted2: rgba(255, 255, 255, 0.70);
+      --shadow: 0 18px 60px rgba(0,0,0,0.55);
+      --radius: 18px;
+      --radius2: 14px;
+      --headerH: 72px;
+
+      /* Paleta baseada na logo (JS atualiza) */
+      --accent: 120 120 255;        /* fallback */
+      --accent2: 60 220 255;        /* fallback */
+    }
+    
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+                  radial-gradient(1200px 700px at 20% -10%, rgba(var(--accent),0.10), rgba(255,255,255,0.00)),
+                  radial-gradient(900px 600px at 90% 10%, rgba(var(--accent2),0.08), rgba(255,255,255,0.00)),
+                  linear-gradient(180deg, var(--bg), var(--bg2));
+      color: var(--text);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* Ajudar o scroll com header fixo */
+    section { scroll-margin-top: calc(var(--headerH) + 18px); }
+
+    /* =========================
+       Fundo animado (particles)
+    ========================= */
+    #bg {
+      position: fixed;
+      inset: 0;
+      z-index: -3;
+      opacity: 0;
+      transition: opacity 700ms ease;
+      pointer-events: none;
+    }
+    body.show-animated-bg #bg { opacity: 1; }
+
+    /* =========================
+       Header
+    ========================= */
+    header {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: var(--headerH);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      background: rgba(0,0,0,0.62);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 1000;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      user-select: none;
+      min-width: 240px;
+    }
+
+    .brand img {
+      height: 44px;
+      width: auto;
+      display: block;
+    }
+
+    .brand .brand-fallback {
+      display: none;
+      height: 44px;
+      width: 44px;
+      border: 2px solid rgba(255,255,255,0.85);
+      border-radius: 12px;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .brand .brand-text {
+      font-weight: 850;
+      letter-spacing: 0.2px;
+      opacity: 0.95;
+      white-space: nowrap;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      font-weight: 700;
+      opacity: 0.86;
+      transition: opacity .2s, background .2s, transform .2s;
+    }
+
+    nav a:hover {
+      opacity: 1;
+      background: rgba(255,255,255,0.06);
+      transform: translateY(-1px);
+    }
+
+    nav a.active {
+      opacity: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    nav svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      opacity: 0.95;
+    }
+
+    .menu-btn {
+      display: none;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: var(--headerH);
+      left: 0;
+      right: 0;
+      padding: 14px;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 999;
+    }
+
+    .mobile-nav a{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+      margin-bottom: 10px;
+      font-weight: 750;
+      opacity: 0.92;
+    }
+
+    .mobile-nav a:last-child{ margin-bottom: 0; }
+
+    body.menu-open .mobile-nav{ display:block; }
+
+    /* =========================
+       Hero
+    ========================= */
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding-top: var(--headerH);
+      display: grid;
+      align-items: center;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -14vh;
+      background-image: url("vividly-colored-hummingbird-nature.jpg");
+      background-size: cover;
+      background-position: 60% 45%;
+      background-repeat: no-repeat;
+      transform: translateY(var(--parallax, 0px)) scale(1.22);
+      filter: saturate(1.06) contrast(1.06);
+      z-index: -2;
+      will-change: transform;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(700px 450px at 18% 30%, rgba(255,255,255,0.10), rgba(255,255,255,0.00) 60%),
+        radial-gradient(900px 600px at 85% 25%, rgba(0,0,0,0.10), rgba(0,0,0,0.00) 60%),
+        linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.70) 62%, rgba(0,0,0,0.88) 100%);
+      backdrop-filter: blur(var(--heroBlur, 0px));
+      transition: backdrop-filter 150ms ease;
+      z-index: -1;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 10%;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 26px;
+      align-items: center;
+      padding: 72px 0 32px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border: 1px solid rgba(var(--accent),0.28);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.26);
+      color: rgba(255,255,255,0.92);
+      font-weight: 750;
+      width: fit-content;
+      margin-bottom: 14px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
+    }
+    
+    .badge {
+  color: rgba(255,255,255,0.92);
+  font-weight: 750;
+  width: fit-content;
+  margin-bottom: 14px;
+}
+
+    
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 4.8vw, 3.9rem);
+      line-height: 1.08;
+      letter-spacing: 0.3px;
+      margin-bottom: 14px;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      color: rgba(255,255,255,0.92);
+      max-width: 740px;
+      margin-bottom: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .btn {
+      background: #fff;
+      color: #000;
+      padding: 13px 26px;
+      border: 2px solid #fff;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: 0.55px;
+      text-transform: uppercase;
+      transition: 0.22s;
+    }
+
+    .btn:hover {
+      background: #000;
+      color: #fff;
+      border-color: #fff;
+      transform: translateY(-2px);
+    }
+
+    .btn.ghost {
+      background: rgba(0,0,0,0.22);
+      color: #fff;
+      border-color: rgba(255,255,255,0.90);
+    }
+
+    .btn.ghost:hover {
+      background: #fff;
+      color: #000;
+      border-color: #fff;
+    }
+
+    .hero-card {
+      background: rgba(0,0,0,0.30);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card .media {
+      height: 270px;
+      border: none;
+      border-radius: 0;
+      background: transparent;
+    }
+
+    .hero-card .meta {
+      padding: 18px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.30);
+    }
+
+    .meta-title {
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      margin-bottom: 6px;
+    }
+
+    .meta-desc {
+      color: rgba(255,255,255,0.78);
+      font-size: 0.98rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: rgba(255,255,255,0.86);
+      font-weight: 750;
+      font-size: 0.92rem;
+    }
+
+    /* =========================
+       Seções
+    ========================= */
+    section.block {
+      padding: 92px 0;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 42px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -40px;
+      background:
+        radial-gradient(520px 280px at 20% 10%, rgba(var(--accent),0.14), rgba(255,255,255,0.00) 60%),
+        radial-gradient(620px 320px at 90% 20%, rgba(var(--accent2),0.10), rgba(255,255,255,0.00) 60%);
+      pointer-events: none;
+    }
+
+    h2 {
+      font-size: clamp(1.9rem, 3vw, 2.6rem);
+      margin-bottom: 12px;
+      letter-spacing: 0.2px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .subtitle {
+      color: var(--muted2);
+      max-width: 780px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    p {
+      color: var(--muted);
+      max-width: 780px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .media {
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: var(--radius);
+      overflow: hidden;
+      height: 340px;
+      position: relative;
+    }
+
+    .media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease, filter 0.4s ease;
+      filter: saturate(1.02) contrast(1.02);
+    }
+
+    .media:hover img { transform: scale(1.06); filter: saturate(1.06) contrast(1.05); }
+
+    .media .caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 12px 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted2);
+      font-size: 0.95rem;
+      background: linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.62));
+    }
+
+    /* Sobre: foto com moldura mais "premium" */
+    .portrait {
+      height: 360px;
+    }
+
+    /* =========================
+       Serviços / Projetos
+    ========================= */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .card {
+      background: rgba(0,0,0,0.40);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 16px;
+      padding: 22px;
+      transition: transform .25s, background .25s, border-color .25s;
+      min-height: 170px;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+      letter-spacing: 0.2px;
+    }
+
+    .card p {
+      max-width: none;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.8;
+      margin-bottom: 0;
+    }
+
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .p-card {
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.38);
+      overflow: hidden;
+      transition: transform .25s, background .25s;
+    }
+
+    .p-card:hover { transform: translateY(-6px); background: rgba(255,255,255,0.06); }
+
+    .p-thumb {
+      height: 160px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+      position: relative;
+    }
+
+    .p-thumb img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .p-body { padding: 14px 14px 16px; }
+
+    .p-title { font-weight: 900; margin-bottom: 6px; }
+
+    .p-text { color: rgba(255,255,255,0.78); font-size: 0.95rem; line-height: 1.65; }
+
+    /* =========================
+       Tabs (Dicas)
+    ========================= */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 16px 0 14px;
+    }
+
+    .tab-btn {
+      background: #fff;
+      color: #000;
+      border: 2px solid #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 900;
+      letter-spacing: .4px;
+      text-transform: uppercase;
+      transition: 0.2s;
+    }
+
+    .tab-btn:hover {
+      background: #000;
+      color: #fff;
+      border-color: #fff;
+    }
+
+    .tab-btn.active {
+      background: #000;
+      color: #fff;
+      border-color: #fff;
+    }
+
+    .tab-content {
+      display: none;
+      margin-top: 10px;
+      background: rgba(0,0,0,0.42);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 18px;
+      color: rgba(255,255,255,0.86);
+      max-width: 860px;
+    }
+
+    .tab-content.active { display: block; }
+
+    .tab-content p{ max-width: none; }
+
+    /* =========================
+       Contato
+    ========================= */
+    .cta-row{
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .small {
+      color: rgba(255,255,255,0.72);
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+
+    /* =========================
+       Reveal
+    ========================= */
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 650ms ease, transform 650ms ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* =========================
+       Footer
+    ========================= */
+    footer {
+      background: #000;
+      text-align: center;
+      padding: 44px 18px;
+      font-size: .92rem;
+      opacity: .80;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* =========================
+       Responsivo
+    ========================= */
+    @media (max-width: 1100px) {
+      header { padding: 0 18px; }
+      .wrap { padding: 0 6%; }
+      .hero-grid { grid-template-columns: 1fr; padding: 56px 0 24px; }
+      .hero-card .media { height: 240px; }
+      .panel { padding: 28px; }
+      .split { grid-template-columns: 1fr; }
+      .media { height: 280px; }
+      .projects { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 650px){
+      nav { display:none; }
+      .menu-btn { display: inline-flex; align-items:center; gap:10px; }
+      .brand { min-width: auto; }
+      .brand .brand-text { display: none; }
+      section.block { padding: 74px 0; }
+    }
+
+    /* Acessibilidade: reduz movimento */
+    @media (prefers-reduced-motion: reduce){
+      html { scroll-behavior: auto; }
+      .reveal { transition: none; transform: none; }
+      .media img { transition: none; }
+      .btn { transition: none; }
+      #bg { display:none; }
+    }
+
+    /* =========================
+       ULTRAWIDE / MONITOR BEM LARGO
+    ========================= */
+    @media (min-width: 1400px) {
+      .wrap { max-width: 1400px; padding: 0 7%; }
+      header { padding: 0 80px; }
+      .hero-grid { gap: 34px; }
+      .hero-card .media { height: 320px; }
+      .panel { padding: 54px; }
+      section.block { padding: 125px 0; }
+      p, .subtitle { max-width: 900px; }
+    }
+
+    @media (min-width: 1700px) {
+      .wrap { max-width: 1650px; padding: 0 8%; }
+      .hero-grid { grid-template-columns: 1.15fr 0.85fr; }
+      .hero-card .media { height: 360px; }
+      section.block { padding: 150px 0; }
+      .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .projects { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+  </style>
+</head>
+<body>
+  <canvas id="bg"></canvas>
+
+  <header>
+    <div class="brand" onclick="scrollToId('home')">
+      <img src="logo-insta.png" alt="Logo" onerror="this.style.display='none'; document.getElementById('brandFallback').style.display='flex';">
+      <div id="brandFallback" class="brand-fallback">S</div>
+      <span class="brand-text">Samuel • Portfólio</span>
+    </div>
+
+    <nav id="nav">
+      <a href="#home" data-link="home" title="Início">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+        Início
+      </a>
+      <a href="#sobre" data-link="sobre" title="Sobre">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-3-3.87"/><path d="M4 21v-2a4 4 0 0 1 3-3.87"/><circle cx="12" cy="7" r="4"/></svg>
+        Sobre
+      </a>
+      <a href="#servicos" data-link="servicos" title="Serviços">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M12 4h9"/><path d="M3 6h6v6H3z"/><path d="M3 12h6v6H3z"/></svg>
+        Serviços
+      </a>
+      <a href="#projetos" data-link="projetos" title="Projetos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+        Projetos
+      </a>
+      <a href="#dicas" data-link="dicas" title="Dicas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12c.6.5 1 1.3 1 2h6c0-.7.4-1.5 1-2a7 7 0 0 0-4-12z"/></svg>
+        Dicas
+      </a>
+      <a href="#marketing" data-link="marketing" title="Marketing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 6-6"/></svg>
+        Marketing
+      </a>
+      <a href="#contato" data-link="contato" title="Contato">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.12.86.3 1.7.54 2.5a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.58-1.06a2 2 0 0 1 2.11-.45c.8.24 1.64.42 2.5.54A2 2 0 0 1 22 16.92z"/></svg>
+        Contato
+      </a>
+    </nav>
+
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">
+      <span>Menu</span>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+    </button>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#home" onclick="closeMenu()">Início</a>
+    <a href="#sobre" onclick="closeMenu()">Sobre</a>
+    <a href="#servicos" onclick="closeMenu()">Serviços</a>
+    <a href="#projetos" onclick="closeMenu()">Projetos</a>
+    <a href="#dicas" onclick="closeMenu()">Dicas</a>
+    <a href="#marketing" onclick="closeMenu()">Marketing</a>
+    <a href="#contato" onclick="closeMenu()">Contato</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="reveal">
+          <div class="badge">⚡ Portfólio • Design • Tecnologia • Marketing</div>
+          <h1>Projetos digitais com visual profissional e base técnica</h1>
+          <p>
+            Sou Samuel — designer e entusiasta da tecnologia. Eu crio soluções digitais modernas com foco em identidade visual,
+            organização e performance. Se você busca um site bem feito, um visual forte ou dicas práticas, você está no lugar certo.
+          </p>
+
+          <div class="hero-actions">
+            <button class="btn" onclick="scrollToId('servicos')">Ver serviços</button>
+            <button class="btn ghost" onclick="scrollToId('contato')">Falar no WhatsApp</button>
+          </div>
+
+          <div class="chips" aria-label="Especialidades">
+            <div class="chip">Design</div>
+            <div class="chip">Sites</div>
+            <div class="chip">Tecnologia</div>
+            <div class="chip">Marketing</div>
+          </div>
+        </div>
+
+        <aside class="hero-card reveal">
+          <div class="media" style="height:270px;border:none;border-radius:0;">
+            <img src="img-projetos.jpg" alt="Trabalho em tecnologia" loading="lazy" onerror="this.src='programming-background-with-person-working-with-codes-computer.jpg'">
+            <div class="caption">Organização • Clareza • Resultado</div>
+          </div>
+          <div class="meta">
+            <div class="meta-title">Entrega profissional</div>
+            <div class="meta-desc">Layout limpo, código organizado e experiência agradável para quem visita.</div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section class="block" id="sobre">
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Quem sou eu</h2>
+        <p class="subtitle">Uma visão rápida e direta do que eu faço — e como eu penso na hora de criar.</p>
+
+        <div class="split">
+          <div>
+            <p>
+              Meu nome é Samuel e eu trabalho com design, tecnologia e criação digital. Eu estudo constantemente computadores,
+              sistemas e comunicação visual para construir projetos modernos, organizados e profissionais.
+            </p>
+            <p>
+              Meu foco é unir estética e técnica: um visual que passa confiança com uma estrutura bem feita por trás.
+              Isso deixa o site mais rápido, mais claro e muito mais agradável para quem acessa.
+            </p>
+
+            <div class="chips">
+              <div class="chip">Identidade Visual</div>
+              <div class="chip">Web</div>
+              <div class="chip">Otimização</div>
+              <div class="chip">Suporte</div>
+            </div>
+          </div>
+
+          <div class="media portrait">
+            <img src="samuel.jpg" alt="Foto do Samuel" loading="lazy">
+            <div class="caption">Samuel — Design & Tecnologia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVIÇOS -->
+  <section class="block" id="servicos">
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Serviços</h2>
+        <p class="subtitle">Soluções pensadas para deixar seu projeto mais forte, mais bonito e mais confiável.</p>
+
+        <div class="split">
+          <div>
+            <p>
+              Aqui estão as áreas em que atuo e o tipo de valor que eu busco entregar em cada projeto.
+              A ideia é simples: unir um visual forte com uma estrutura bem feita para um resultado profissional.
+            </p>
+
+            <div class="grid">
+              <div class="card">
+                <h3>Design Profissional</h3>
+                <p>Identidade visual, layouts modernos e padronização para transmitir confiança e autoridade no digital.</p>
+              </div>
+              <div class="card">
+                <h3>Tecnologia & Computadores</h3>
+                <p>Diagnóstico, otimização e soluções práticas para melhorar estabilidade, desempenho e organização.</p>
+              </div>
+              <div class="card">
+                <h3>Sites & Páginas</h3>
+                <p>Estrutura clara, experiência do usuário e performance — um site bonito e fácil de manter.</p>
+              </div>
+              <div class="card">
+                <h3>Marketing Digital</h3>
+                <p>Posicionamento, presença online e comunicação clara para fortalecer sua marca e gerar resultados.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="media">
+            <img src="img-servicos.jpg" alt="Serviços" loading="lazy" onerror="this.src='programming-background-with-person-working-with-codes-computer.jpg'">
+            <div class="caption">Visual forte com base técnica</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJETOS -->
+  <section class="block" id="projetos">
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Projetos</h2>
+        <p class="subtitle">Um jeito organizado de mostrar o que você faz. Substitua os textos e imagens pelos seus trabalhos.</p>
+
+        <div class="projects">
+          <div class="p-card">
+            <div class="p-thumb">
+              <img src="img-projeto-1.jpg" alt="Projeto 1" loading="lazy" onerror="this.src='programming-background-with-person-working-with-codes-computer.jpg'">
+            </div>
+            <div class="p-body">
+              <div class="p-title">Landing Page</div>
+              <div class="p-text">Página direta, rápida e focada em conversão, com visual limpo e CTA bem posicionado.</div>
+            </div>
+          </div>
+
+          <div class="p-card">
+            <div class="p-thumb">
+              <img src="img-projeto-2.jpg" alt="Projeto 2" loading="lazy" onerror="this.src='vividly-colored-hummingbird-nature.jpg'">
+            </div>
+            <div class="p-body">
+              <div class="p-title">Identidade Visual</div>
+              <div class="p-text">Padronização, cores e tipografia para um visual consistente que transmite profissionalismo.</div>
+            </div>
+          </div>
+
+          <div class="p-card">
+            <div class="p-thumb">
+              <img src="img-projeto-3.jpg" alt="Projeto 3" loading="lazy" onerror="this.src='programming-background-with-person-working-with-codes-computer.jpg'">
+            </div>
+            <div class="p-body">
+              <div class="p-title">Suporte & Otimização</div>
+              <div class="p-text">Organização, ajustes e melhoria de desempenho para deixar tudo mais estável e rápido.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-row" style="margin-top:18px;">
+          <button class="btn" onclick="scrollToId('contato')">Quero um projeto assim</button>
+          <button class="btn ghost" onclick="scrollToId('dicas')">Ver dicas</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DICAS -->
+  <section class="block" id="dicas">
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Dicas e soluções</h2>
+        <p class="subtitle">Conteúdo direto para aprender mais rápido e evitar erros comuns.</p>
+
+        <div class="split">
+          <div>
+            <p>
+              Se você entrou aqui buscando soluções, este espaço foi feito para te ajudar.
+              Use as abas para navegar por temas e encontrar orientações simples e práticas.
+            </p>
+
+            <div class="tabs">
+              <button class="tab-btn active" onclick="openTab(event, 'tab-tech')">Tecnologia</button>
+              <button class="tab-btn" onclick="openTab(event, 'tab-design')">Design</button>
+              <button class="tab-btn" onclick="openTab(event, 'tab-mkt')">Marketing</button>
+            </div>
+
+            <div id="tab-tech" class="tab-content active">
+              <p><strong>1)</strong> Antes de mexer em configurações, entenda a causa: quando começou, o que mudou e qual erro aparece.</p>
+              <p><strong>2)</strong> Atualize com cuidado: use fontes oficiais e evite ferramentas “milagrosas”.</p>
+              <p><strong>3)</strong> Organização é base: backups, pastas e limpeza ajudam a manter estabilidade por mais tempo.</p>
+            </div>
+
+            <div id="tab-design" class="tab-content">
+              <p><strong>1)</strong> Design bom guia o olhar: menos poluição, mais clareza e leitura fácil.</p>
+              <p><strong>2)</strong> Hierarquia: títulos fortes, textos menores e espaçamento consistente.</p>
+              <p><strong>3)</strong> Padrão: botões, cores e tipografia consistentes fazem o projeto parecer mais profissional.</p>
+            </div>
+
+            <div id="tab-mkt" class="tab-content">
+              <p><strong>1)</strong> Marketing é estratégia: público certo, mensagem clara e oferta bem posicionada.</p>
+              <p><strong>2)</strong> Consistência no visual e no conteúdo aumenta confiança e conversão.</p>
+              <p><strong>3)</strong> Mostre valor: conteúdo útil + prova de resultado = credibilidade.</p>
+            </div>
+          </div>
+
+          <div class="media">
+            <img src="img-dicas.jpg" alt="Dicas" loading="lazy" onerror="this.src='programming-background-with-person-working-with-codes-computer.jpg'">
+            <div class="caption">Conteúdo direto e útil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARKETING -->
+  <section class="block" id="marketing">
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Marketing digital</h2>
+        <p class="subtitle">Estratégia, presença e comunicação — para crescer com consistência.</p>
+
+        <div class="split">
+          <div>
+            <p>
+              Marketing digital conecta tecnologia com pessoas. Ele ajuda a aumentar visibilidade, fortalecer a marca e comunicar
+              com clareza o que você faz. O segredo é alinhar visual (design), mensagem (comunicação) e estratégia (posicionamento).
+            </p>
+            <p>
+              Um projeto bem feito cresce com o tempo: presença consistente, conteúdo de valor e uma identidade visual que transmite
+              confiança fazem toda a diferença.
+            </p>
+
+            <div class="chips" style="margin-top:10px;">
+              <div class="chip">Posicionamento</div>
+              <div class="chip">Conteúdo</div>
+              <div class="chip">Conversão</div>
+              <div class="chip">Marca</div>
+            </div>
+          </div>
+
+          <div class="media">
+            <img src="img-marketing.jpg" alt="Marketing" loading="lazy" onerror="this.src='vividly-colored-hummingbird-nature.jpg'">
+            <div class="caption">Estratégia + presença digital</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO (sem imagem) -->
+  <section class="block" id="contato">
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Contato</h2>
+        <p class="subtitle">Me chama no WhatsApp e descreve o que você precisa — eu te respondo.</p>
+
+        <p><strong>WhatsApp:</strong> <span id="phoneText">(21) 97553-5396</span></p>
+        <p>
+          Quer falar sobre um projeto, identidade visual, site ou alguma solução em tecnologia? Me chama.
+          Quanto mais detalhes você mandar, mais rápido eu consigo te orientar.
+        </p>
+
+        <div class="cta-row">
+          <button class="btn" onclick="openWhatsApp()">Falar no WhatsApp</button>
+          <button class="btn ghost" onclick="copyPhone()">Copiar número</button>
+        </div>
+
+        <div class="small" id="copyStatus" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+    <!-- FAQ -->
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Perguntas frequentes</h2>
+        <p class="subtitle">Respostas rápidas pra quem quer entender como eu trabalho e o que você pode esperar.</p>
+
+        <div class="grid" style="margin-top:0;">
+          <div class="card">
+            <h3>O que você entrega em um site?</h3>
+            <p>Layout profissional, estrutura organizada, texto bem escrito, responsivo (celular/PC) e performance com boas práticas.</p>
+          </div>
+          <div class="card">
+            <h3>Você faz identidade visual?</h3>
+            <p>Sim. Posso criar ou ajustar logo, cores, tipografia e padrão visual para deixar sua presença digital consistente.</p>
+          </div>
+          <div class="card">
+            <h3>Você resolve problemas de PC?</h3>
+            <p>Sim. Ajudo com diagnóstico, otimização e ajustes que melhoram estabilidade e desempenho.</p>
+          </div>
+          <div class="card">
+            <h3>Como eu peço um orçamento?</h3>
+            <p>Me chama no WhatsApp, manda o que você quer, objetivo e exemplos. Eu te respondo com o caminho e o melhor formato.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 • Portfólio • Design, Tecnologia & Marketing
+  </footer>
+
+  <script>
+    // =========================
+    // Helpers
+    // =========================
+    function scrollToId(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function openTab(evt, tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      const tab = document.getElementById(tabId);
+      if (tab) tab.classList.add('active');
+      if (evt?.currentTarget) evt.currentTarget.classList.add('active');
+    }
+
+    // =========================
+    // Mobile menu
+    // =========================
+    const menuBtn = document.getElementById('menuBtn');
+    function closeMenu(){ document.body.classList.remove('menu-open'); }
+    if (menuBtn){
+      menuBtn.addEventListener('click', () => {
+        document.body.classList.toggle('menu-open');
+      });
+    }
+    window.closeMenu = closeMenu;
+
+    // Fecha menu se clicar fora
+    document.addEventListener('click', (e) => {
+      if (!document.body.classList.contains('menu-open')) return;
+      const nav = document.getElementById('mobileNav');
+      const header = document.querySelector('header');
+      if (!nav.contains(e.target) && !header.contains(e.target)) closeMenu();
+    });
+
+    // =========================
+    // Scroll effects: parallax + blur + mostrar partículas
+    // =========================
+    const heroEl = document.getElementById('home');
+
+    function onScroll() {
+      const y = window.scrollY;
+      const parallax = Math.max(-180, Math.min(0, -y * 0.12));
+      const blur = Math.min(y / 90, 10);
+      heroEl.style.setProperty('--parallax', `${parallax}px`);
+      heroEl.style.setProperty('--heroBlur', `${blur}px`);
+
+      if (y > window.innerHeight * 0.40) {
+        document.body.classList.add('show-animated-bg');
+      } else {
+        document.body.classList.remove('show-animated-bg');
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // =========================
+    // Reveal animation
+    // =========================
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) e.target.classList.add('in');
+      }
+    }, { threshold: 0.18 });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // =========================
+    // Active nav link
+    // =========================
+    const sections = ['home','sobre','servicos','projetos','dicas','marketing','contato']
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    const navLinks = Array.from(document.querySelectorAll('nav a[data-link]'));
+
+    const ioNav = new IntersectionObserver((entries) => {
+      // escolhe a seção mais visível
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+      if (!visible) return;
+      const id = visible.target.id;
+      navLinks.forEach(a => a.classList.toggle('active', a.dataset.link === id));
+    }, { threshold: [0.2, 0.35, 0.5, 0.65] });
+
+    sections.forEach(sec => ioNav.observe(sec));
+
+    // =========================
+    // WhatsApp + copiar número
+    // =========================
+    function openWhatsApp(){
+      // wa.me sem caracteres
+      const phone = '5521975535396';
+      const msg = encodeURIComponent('Olá! Vim pelo seu site e gostaria de falar sobre um projeto.');
+      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
+    }
+
+    async function copyPhone(){
+      const text = document.getElementById('phoneText')?.innerText || '(21) 97553-5396';
+      const status = document.getElementById('copyStatus');
+      try{
+        await navigator.clipboard.writeText(text);
+        if (status) status.textContent = 'Número copiado! ✅';
+      } catch (e){
+        if (status) status.textContent = 'Não consegui copiar automaticamente. Selecione e copie manualmente.';
+      }
+      setTimeout(() => { if (status) status.textContent = ''; }, 2600);
+    }
+
+    window.openWhatsApp = openWhatsApp;
+    window.copyPhone = copyPhone;
+
+    // =========================
+    // Fundo animado AURORA (bem mais bonito)
+    // =========================
+    const canvas = document.getElementById('bg');
+    const themeCanvas = document.createElement('canvas');
+    const themeCtx = themeCanvas.getContext('2d', { willReadFrequently: true });
+
+    function setAccentFromRGB(r,g,b){
+      document.documentElement.style.setProperty('--accent', `${r} ${g} ${b}`);
+      // cor secundária (um pouco mais "fria")
+      const r2 = Math.max(0, Math.min(255, Math.round(r * 0.55 + 40)));
+      const g2 = Math.max(0, Math.min(255, Math.round(g * 0.90 + 25)));
+      const b2 = Math.max(0, Math.min(255, Math.round(b * 1.10 + 30)));
+      document.documentElement.style.setProperty('--accent2', `${r2} ${g2} ${b2}`);
+    }
+
+    // Pega uma cor dominante simples da logo e aplica no tema
+    function applyThemeFromLogo(){
+      const logo = document.querySelector('.brand img');
+      if (!logo || !logo.complete) return;
+
+      try{
+        const w = 64, h = 64;
+        themeCanvas.width = w;
+        themeCanvas.height = h;
+        themeCtx.clearRect(0,0,w,h);
+        themeCtx.drawImage(logo, 0, 0, w, h);
+        const data = themeCtx.getImageData(0,0,w,h).data;
+
+        // quantização leve (dominante)
+        const buckets = new Map();
+        for (let i=0; i<data.length; i+=4){
+          const a = data[i+3];
+          if (a < 40) continue;
+          const r = data[i], g = data[i+1], b = data[i+2];
+          // ignora quase branco e quase preto
+          const mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+          if (mx < 25) continue;
+          if (mn > 235) continue;
+
+          const qr = (r/24|0)*24;
+          const qg = (g/24|0)*24;
+          const qb = (b/24|0)*24;
+          const key = `${qr},${qg},${qb}`;
+          buckets.set(key, (buckets.get(key)||0) + 1);
+        }
+
+        let best = null, bestCount = 0;
+        for (const [k,v] of buckets){
+          if (v > bestCount){ best = k; bestCount = v; }
+        }
+
+        if (best){
+          const [r,g,b] = best.split(',').map(n=>parseInt(n,10));
+          setAccentFromRGB(r,g,b);
+        }
+      } catch(e){
+        // se não conseguir ler pixels (CORS), mantém fallback
+      }
+    }
+
+    // aplica tema quando a logo carregar
+    const logoEl = document.querySelector('.brand img');
+    if (logoEl){
+      logoEl.addEventListener('load', applyThemeFromLogo);
+      // se já carregou
+      setTimeout(applyThemeFromLogo, 300);
+    }
+    const ctx = canvas.getContext('2d');
+
+    let W = 0, H = 0, t = 0;
+    const DPR = Math.min(2, window.devicePixelRatio || 1);
+
+    function resizeBg() {
+      W = Math.floor(window.innerWidth);
+      H = Math.floor(window.innerHeight);
+      canvas.width = Math.floor(W * DPR);
+      canvas.height = Math.floor(H * DPR);
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    window.addEventListener('resize', resizeBg);
+    resizeBg();
+
+    const blobs = Array.from({ length: 9 }, (_, i) => ({
+      r: 260 + Math.random() * 420,
+      a: 0.10 + Math.random() * 0.10,
+      sx: 0.25 + Math.random() * 0.35,
+      sy: 0.18 + Math.random() * 0.30,
+      p: Math.random() * Math.PI * 2,
+      c: [
+        '255, 60, 140',  // magenta
+        '255, 160, 60',  // laranja
+        '60, 220, 255',  // ciano
+        '120, 120, 255'  // azul leve
+      ][i % 4]
+    }));
+
+    function drawAurora() {
+      t += 0.006;
+
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = 'rgba(0,0,0,0.85)';
+      ctx.fillRect(0, 0, W, H);
+
+      const g = ctx.createRadialGradient(W*0.5, H*0.2, 0, W*0.5, H*0.2, Math.max(W,H));
+      g.addColorStop(0, 'rgba(255,255,255,0.06)');
+      g.addColorStop(1, 'rgba(0,0,0,0.0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.filter = 'blur(18px)';
+
+      for (const b of blobs) {
+        const xx = (W * 0.5) + Math.cos(t * b.sx + b.p) * (W * 0.28);
+        const yy = (H * 0.55) + Math.sin(t * b.sy + b.p) * (H * 0.22);
+
+        const grad = ctx.createRadialGradient(xx, yy, 0, xx, yy, b.r);
+        grad.addColorStop(0, `rgba(${b.c}, ${b.a})`);
+        grad.addColorStop(1, `rgba(${b.c}, 0)`);
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(xx, yy, b.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+
+      // estrelas discretas
+      ctx.save();
+      ctx.globalAlpha = 0.18;
+      ctx.fillStyle = '#ffffff';
+      const stars = 55;
+      for (let i = 0; i < stars; i++) {
+        const x = (i * 97 + (t * 800)) % W;
+        const y = (i * 157 + (t * 420)) % H;
+        ctx.fillRect(x, y, 1.2, 1.2);
+      }
+      ctx.restore();
+
+      requestAnimationFrame(drawAurora);
+    }
+
+    drawAurora();
+  </script>
+</body>
+</html>
